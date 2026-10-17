@@ -18,5 +18,8 @@ Rule-based clause classification, four-pillar risk findings with real evidence e
 ## Not implemented
 LLM summary, Copilot/RAG, semantic comparison, risk deltas, PDF reports, calendar view, Python/FastAPI service, reminders/notifications processing, charts, OCR, profile/password change, contract metadata editing UI, seed data, automated tests. Tables for several of these exist in the schema but no code uses them yet.
 
-## Status
-Code (including update 2) has not been executed or linted (no PHP runtime in the build environment). Expect small fixes on first run.
+## Update 3
+Added: contract edit and permanent delete, profile and password change (`settings.php`), printable report (`report.php`, use Print > Save as PDF; Dompdf is not used), dashboard charts and upcoming deadlines, mobile menu, optional `STORAGE_DIR` in `.env` to keep uploads outside htdocs (recommended).
+
+## Verification done
+Run on PHP 8.3 + MariaDB 10.11 with the built-in PHP server and curl: all PHP files lint clean; register, login, upload, analysis, obligation confirm, payments (partial payment), exports, edit/delete, report and settings return expected results; a second user gets 404 on another user's contract, report, download and analysis; a bad CSRF token gets 419; a .exe and a fake PDF are rejected. Not tested: Apache/XAMPP itself, PDF and DOCX parsing with real files, mobile layout in a browser, no automated test suite yet.

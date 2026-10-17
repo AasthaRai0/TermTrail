@@ -3,6 +3,7 @@ declare(strict_types=1);
 define('ROOT', dirname(__DIR__));
 $ENV = [];
 if (is_file(ROOT.'/.env')) foreach (file(ROOT.'/.env', FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES) as $l) { if ($l[0]==='#'||!str_contains($l,'=')) continue; [$k,$v]=explode('=',$l,2); $ENV[trim($k)]=trim($v); }
+function storage_dir(): string { $d=rtrim(env('STORAGE_DIR',ROOT.'/storage'),'/\\'); if(!is_dir($d)) @mkdir($d,0775,true); return $d.'/'; }
 function env(string $k, string $d=''): string { global $ENV; return $ENV[$k] ?? $d; }
 ini_set('display_errors','0'); ini_set('log_errors','1');
 session_set_cookie_params(['httponly'=>true,'samesite'=>'Lax','path'=>'/']);
@@ -24,8 +25,8 @@ function valid_date(?string $d): ?string { if(!$d) return null; $x=DateTime::cre
 function page_head(string $title, bool $app=true): void { $f=flash(); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?=e($title)?> · TermTrail AI</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"><link href="assets/css/app.css" rel="stylesheet"></head><body>
-<?php if($app): ?><div class="shell"><aside class="side"><a class="brand" href="dashboard.php">TermTrail <span>AI</span></a>
-<nav><a href="dashboard.php">Overview</a><a href="contracts.php">Contracts</a><a href="obligations.php">Obligations</a><a href="payments.php">Payments</a><a href="export.php?t=obligations">Export obligations CSV</a><a href="export.php?t=payments">Export payments CSV</a>
+<?php if($app): ?><button class="btn btn-sm btn-outline-light m-2 d-md-none" onclick="document.querySelector('.side').classList.toggle('open')">Menu</button><div class="shell"><aside class="side"><a class="brand" href="dashboard.php">TermTrail <span>AI</span></a>
+<nav><a href="dashboard.php">Overview</a><a href="contracts.php">Contracts</a><a href="obligations.php">Obligations</a><a href="payments.php">Payments</a><a href="settings.php">Settings</a><a href="export.php?t=obligations">Export obligations CSV</a><a href="export.php?t=payments">Export payments CSV</a>
 </nav>
 <form method="post" action="logout.php"><?=csrf_field()?><button class="btn btn-sm btn-outline-light mt-3">Log out</button></form></aside><main class="main">
 <?php endif; if($f): ?><div class="alert alert-<?=$f[1]==='error'?'danger':'success'?>"><?=e($f[0])?></div><?php endif; }
