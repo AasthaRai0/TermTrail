@@ -1,4 +1,5 @@
 .env
+storage/*
+!storage/.gitkeep
+!storage/.htaccess
 vendor/
-storage/uploads/*
-!storage/uploads/.gitkeep

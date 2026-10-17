@@ -1,20 +1,7 @@
-<?php require __DIR__.'/src/bootstrap.php';
-$errors = []; $name = $email = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') { csrf_check();
-  $name = trim($_POST['name'] ?? ''); $email = strtolower(trim($_POST['email'] ?? '')); $pw = (string)($_POST['password'] ?? '');
-  if ($name === '' || mb_strlen($name) > 100) $errors[] = 'Enter your name (max 100 characters).';
-  if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 190) $errors[] = 'Enter a valid email address.';
-  if (strlen($pw) < 10) $errors[] = 'Password must be at least 10 characters.';
-  if (!$errors) { try {
-    db()->prepare('INSERT INTO users(name,email,password_hash) VALUES(?,?,?)')->execute([$name,$email,password_hash($pw, PASSWORD_DEFAULT)]);
-    $id = (int)db()->lastInsertId(); session_regenerate_id(true); $_SESSION['uid'] = $id; log_activity($id, null, 'user_registered'); redirect('/dashboard.php');
-  } catch (PDOException $e) { $errors[] = $e->getCode() === '23000' ? 'An account with this email already exists.' : 'Registration failed. Please try again.'; if ($e->getCode() !== '23000') error_log($e->getMessage()); } } }
-page_head('Register'); ?>
-<main class="container py-5" style="max-width:460px"><div class="tt-card"><h1 class="h3 mb-3">Create your account</h1>
-<?php foreach ($errors as $m): ?><div class="alert alert-danger py-2" role="alert"><?= e($m) ?></div><?php endforeach; ?>
-<form method="post" novalidate><?= csrf_field() ?>
-<label class="form-label" for="name">Name</label><input class="form-control mb-3" id="name" name="name" value="<?= e($name) ?>" required>
-<label class="form-label" for="email">Email</label><input class="form-control mb-3" id="email" type="email" name="email" value="<?= e($email) ?>" required>
-<label class="form-label" for="password">Password (10+ characters)</label><input class="form-control mb-3" id="password" type="password" name="password" minlength="10" required>
-<button class="btn btn-accent w-100">Register</button></form>
-<p class="mt-3 mb-0 tt-muted">Have an account? <a href="login.php">Log in</a></p></div></main><?php page_foot();
+<?php require 'config/bootstrap.php'; $err=[];
+if($_SERVER['REQUEST_METHOD']==='POST'){ csrf_check(); $n=trim($_POST['name']??''); $m=strtolower(trim($_POST['email']??'')); $p=$_POST['password']??'';
+ if($n==='')$err[]='Name is required.'; if(!filter_var($m,FILTER_VALIDATE_EMAIL))$err[]='Valid email required.'; if(strlen($p)<8)$err[]='Password must be at least 8 characters.';
+ if(!$err){ $s=db()->prepare('SELECT id FROM users WHERE email=?'); $s->execute([$m]); if($s->fetch())$err[]='Email already registered.'; }
+ if(!$err){ db()->prepare('INSERT INTO users(name,email,password_hash) VALUES(?,?,?)')->execute([$n,$m,password_hash($p,PASSWORD_DEFAULT)]); flash('Account created. Please log in.'); header('Location: login.php'); exit; } }
+page_head('Register',false); ?><div class="auth cardx"><h2>Create account</h2><?php foreach($err as $x):?><div class="alert alert-danger"><?=e($x)?></div><?php endforeach;?>
+<form method="post"><?=csrf_field()?><label class="form-label mt-2">Name</label><input class="form-control" name="name" required value="<?=e($_POST['name']??'')?>"><label class="form-label mt-2">Email</label><input class="form-control" type="email" name="email" required value="<?=e($_POST['email']??'')?>"><label class="form-label mt-2">Password</label><input class="form-control" type="password" name="password" minlength="8" required><button class="btn btn-primary w-100 mt-3">Register</button></form><p class="mt-3 mb-0"><a href="login.php">Already registered?</a></p></div><?php page_foot(false);
