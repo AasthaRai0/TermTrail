@@ -1,0 +1,11 @@
+.sidebar-backdrop{display:none}
+@media (max-width:991.98px){
+  .sidebar{position:fixed;z-index:1040;left:0;top:0;margin-left:calc(-1 * var(--sidebar-w))}
+  .app-shell.nav-open .sidebar{margin-left:0}
+  .app-shell.nav-open .sidebar-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1030}
+  .content{padding:1rem}.topbar{padding:.6rem 1rem}
+}
+@media (min-width:992px){
+  .app-shell.nav-collapsed .sidebar{margin-left:calc(-1 * var(--sidebar-w))}
+}
+@media (max-width:575.98px){.auth-card{padding:1.5rem}.stat-value{font-size:1.3rem}}

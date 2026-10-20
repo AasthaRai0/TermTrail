@@ -1,5 +1,0 @@
-.env
-storage/*
-!storage/.gitkeep
-!storage/.htaccess
-vendor/

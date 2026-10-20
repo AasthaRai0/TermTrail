@@ -1,5 +1,0 @@
-<?php require 'config/bootstrap.php'; $err='';
-if($_SERVER['REQUEST_METHOD']==='POST'){ csrf_check(); $s=db()->prepare('SELECT * FROM users WHERE email=?'); $s->execute([strtolower(trim($_POST['email']??''))]); $u=$s->fetch();
- if($u && password_verify($_POST['password']??'',$u['password_hash'])){ session_regenerate_id(true); $_SESSION['uid']=(int)$u['id']; $_SESSION['name']=$u['name']; log_act('login'); header('Location: dashboard.php'); exit; } $err='Invalid email or password.'; }
-page_head('Login',false); ?><div class="auth cardx"><h2>Log in</h2><?php if($err):?><div class="alert alert-danger"><?=e($err)?></div><?php endif;?>
-<form method="post"><?=csrf_field()?><label class="form-label">Email</label><input class="form-control" type="email" name="email" required><label class="form-label mt-2">Password</label><input class="form-control" type="password" name="password" required><button class="btn btn-primary w-100 mt-3">Log in</button></form><p class="mt-3 mb-0"><a href="register.php">Create account</a></p></div><?php page_foot(false);

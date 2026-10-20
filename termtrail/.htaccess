@@ -1,0 +1,5 @@
+Options -Indexes
+<FilesMatch "^(\.env|composer\.(json|lock)|phpunit\.xml|README\.md)$">
+  Require all denied
+</FilesMatch>
+RedirectMatch 403 ^/termtrail/(storage|backend/(config|models|services|helpers|middleware|controllers)|database|cron|tests|vendor)/

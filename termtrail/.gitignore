@@ -1,0 +1,8 @@
+.env
+/vendor/
+/storage/contracts/*
+/storage/extracted_text/*
+/storage/reports/*
+/storage/logs/*
+!/storage/**/.gitkeep
+.phpunit.result.cache

@@ -1,7 +1,0 @@
-<?php require 'config/bootstrap.php'; $err=[];
-if($_SERVER['REQUEST_METHOD']==='POST'){ csrf_check(); $n=trim($_POST['name']??''); $m=strtolower(trim($_POST['email']??'')); $p=$_POST['password']??'';
- if($n==='')$err[]='Name is required.'; if(!filter_var($m,FILTER_VALIDATE_EMAIL))$err[]='Valid email required.'; if(strlen($p)<8)$err[]='Password must be at least 8 characters.';
- if(!$err){ $s=db()->prepare('SELECT id FROM users WHERE email=?'); $s->execute([$m]); if($s->fetch())$err[]='Email already registered.'; }
- if(!$err){ db()->prepare('INSERT INTO users(name,email,password_hash) VALUES(?,?,?)')->execute([$n,$m,password_hash($p,PASSWORD_DEFAULT)]); flash('Account created. Please log in.'); header('Location: login.php'); exit; } }
-page_head('Register',false); ?><div class="auth cardx"><h2>Create account</h2><?php foreach($err as $x):?><div class="alert alert-danger"><?=e($x)?></div><?php endforeach;?>
-<form method="post"><?=csrf_field()?><label class="form-label mt-2">Name</label><input class="form-control" name="name" required value="<?=e($_POST['name']??'')?>"><label class="form-label mt-2">Email</label><input class="form-control" type="email" name="email" required value="<?=e($_POST['email']??'')?>"><label class="form-label mt-2">Password</label><input class="form-control" type="password" name="password" minlength="8" required><button class="btn btn-primary w-100 mt-3">Register</button></form><p class="mt-3 mb-0"><a href="login.php">Already registered?</a></p></div><?php page_foot(false);
