@@ -27,8 +27,6 @@ Instead of treating a contract as a static PDF, TermTrail AI turns it into struc
 - [Testing](#testing)
 - [Limitations](#limitations)
 - [Future Enhancements](#future-enhancements)
-- [Contributing](#contributing)
-- [License](#license)
 
 ---
 
