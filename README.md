@@ -1,140 +1,325 @@
 # TermTrail AI
-### Understand the Contract. Manage Every Commitment.
+### Understand the contract. Manage every commitment.
 
-**TermTrail AI** is an AI-powered contract intelligence and lifecycle management platform designed to help users understand complex legal documents, identify potentially risky clauses, track contractual obligations, and manage important deadlines from a single workspace.
+**An AI-powered contract intelligence and lifecycle management platform built with PHP, MySQL, and Gemini AI.**
 
-Instead of treating contracts as static documents, TermTrail AI transforms them into actionable, searchable, and manageable information.
+TermTrail AI helps users understand complex contracts, review potentially risky clauses, extract important dates and financial commitments, and manage obligations, payments, renewals, and deadlines through a centralized dashboard.
 
-> Turn complex contracts into clear insights, actionable commitments, and informed decisions.
+Instead of treating a contract as a static PDF, TermTrail AI turns it into structured, searchable information that users can review and manage throughout its lifecycle.
+
+> **Disclaimer:** TermTrail AI provides informational assistance, not legal advice. AI-generated summaries, classifications, and risk findings require human review.
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [AI and Document Intelligence](#ai-and-document-intelligence)
+- [Technology Stack](#technology-stack)
+- [System Architecture](#system-architecture)
+- [Project Structure](#project-structure)
+- [Database Design](#database-design)
+- [Getting Started](#getting-started)
+- [Environment Configuration](#environment-configuration)
+- [How It Works](#how-it-works)
+- [Security](#security)
+- [Testing](#testing)
+- [Limitations](#limitations)
+- [Future Enhancements](#future-enhancements)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
 ## Overview
 
-Contracts often contain complicated legal language, hidden conditions, payment commitments, renewal clauses, and strict deadlines. Manually reviewing and managing these details can be time-consuming and error-prone.
+Contracts often contain complicated legal language, financial conditions, renewal clauses, deadlines, and obligations that are difficult to track manually.
 
-TermTrail AI combines document intelligence with contract lifecycle management to help users:
+TermTrail AI is designed to simplify this process through a combination of document processing, AI-assisted analysis, evidence-grounded question answering, and contract lifecycle management.
 
-- Understand contracts through plain-English summaries.
-- Identify potentially concerning clauses with supporting evidence.
-- Extract obligations, payment terms, and important deadlines.
-- Monitor renewals, termination dates, and pending commitments.
-- Compare contract versions and review document changes.
-- Ask questions about contracts using evidence-grounded AI assistance.
-- Manage the contract review process through a centralized dashboard.
+### The platform helps users:
 
-The platform is designed to support contract understanding and organization, not replace qualified legal advice.
+- Understand lengthy agreements through plain-English summaries.
+- Identify clauses that may require additional attention.
+- Review AI-generated risk findings with supporting document evidence.
+- Extract dates, amounts, parties, and contractual commitments.
+- Track approved obligations, payments, renewals, and deadlines.
+- Ask questions about a contract using its extracted content.
+- Compare contract versions and review textual changes.
+- Generate reports and maintain an audit trail.
+
+### Project Goals
+
+- Build a complete full-stack application using PHP and MySQL.
+- Integrate an external LLM API without requiring a separate AI backend.
+- Keep contract records and extracted document content organized.
+- Make AI results explainable and subject to human approval.
+- Provide a practical contract management workflow beyond basic document summarization.
+
+---
 
 ## Key Features
 
-### 1. Contract Intelligence
+### 1. Authentication and Role-Based Access
 
-Upload contracts and transform document content into structured information.
+- User registration, login, and logout.
+- Secure password hashing.
+- Session-based authentication.
+- Role-based access for Admin, Manager, and Viewer.
+- Protected pages and API endpoints.
+- User settings and password management.
 
-- PDF, DOCX, and TXT document ingestion.
-- Document text extraction and processing.
-- Plain-English contract summaries.
-- Clause classification and categorization.
-- Financial, termination, privacy, and intellectual-property risk review.
-- Evidence-backed risk findings with relevant text excerpts.
-- Suggested obligations, deadlines, renewal terms, and payment conditions.
+### 2. Contract Dashboard
 
-### 2. Contract Lifecycle Management
-
-Manage contracts throughout their lifecycle from one place.
-
-- Centralized contract library.
-- Contract metadata and counterparty management.
-- Contract status tracking.
-- Start dates, expiration dates, and renewal dates.
-- Search, filtering, sorting, and archiving.
-- Contract-specific notes and activity history.
-
-### 3. Obligation & Deadline Tracking
-
-Turn contractual commitments into actionable tasks.
-
-- Create and manage contractual obligations.
-- Track due dates, priorities, and completion status.
-- Review and approve AI-suggested obligations.
-- Monitor upcoming and overdue commitments.
-- Track renewal and termination notice deadlines.
-- Manage payment amounts, due dates, and payment status.
-- Receive in-app reminders and notifications.
-
-### 4. Contract Risk Review
-
-Review potentially important contractual terms through a structured interface.
-
-| Risk category | What it helps review |
-|---|---|
-| Financial | Fees, payment conditions, penalties, and cost-related terms |
-| Termination | Termination conditions, notice periods, and renewal provisions |
-| Privacy | Data handling, confidentiality, and privacy-related obligations |
-| Intellectual Property | Ownership, licensing, and intellectual-property clauses |
-
-Risk labels are intended as review indicators, not definitive legal judgments. Findings should include supporting document evidence whenever available.
-
-### 5. Contract Version Comparison
-
-Understand how a contract changes over time.
-
-- Store multiple contract versions.
-- Compare extracted text between versions.
-- Highlight added, removed, and modified passages.
-- Review potentially significant changes.
-- Preserve comparison history.
-
-### 6. Evidence-Grounded AI Copilot
-
-Interact with contract documents through a contextual AI assistant.
-
-- Ask questions about a selected contract.
-- Retrieve relevant passages from the document.
-- Generate answers grounded in retrieved evidence.
-- Display supporting excerpts or source references.
-- Maintain conversation history.
-- Indicate when sufficient evidence is unavailable.
-
-The copilot should not fabricate quotations or claim that a contract contains information that could not be found.
-
-### 7. Dashboard & Analytics
-
-Get an overview of contract activity and upcoming responsibilities.
+The dashboard provides an overview of contract activity through database-driven metrics.
 
 - Total and active contracts.
-- Expiring and expired contracts.
-- High-priority risk findings.
-- Pending and overdue obligations.
-- Upcoming payments and renewals.
-- Contract status visualizations.
-- Risk distribution charts.
-- Recent activity and quick actions.
+- Contracts approaching expiry.
+- Expired contracts.
+- Contracts awaiting review.
+- Open and overdue obligations.
+- Upcoming and overdue payments.
+- High-risk contract indicators.
+- Recent activity and upcoming deadlines.
+- Interactive charts and contract summaries.
 
-Dashboard metrics should reflect actual database records.
+### 3. Contract Library
 
-### 8. Reports & Exports
+Manage contracts in one centralized workspace.
 
-Generate useful outputs for contract review and recordkeeping.
+- Upload PDF, DOCX, and TXT documents.
+- Create contracts manually.
+- Edit contract metadata.
+- Search, sort, filter, and paginate contracts.
+- Organize contracts by type, counterparty, status, and risk level.
+- Add review notes and tags.
+- Archive and restore records.
+- Access authorized original documents.
 
-- Downloadable contract review reports in PDF format.
-- Risk findings and supporting evidence.
-- Contract summaries and key dates.
-- Obligation and payment information.
-- Review notes and checklist progress.
-- CSV exports for supported tabular data.
+### 4. Counterparty Management
 
-### 9. Authentication & Security
+Maintain information about organizations and individuals associated with contracts.
 
-- Secure registration and login.
-- Password hashing.
-- Session-based authentication.
-- User-specific contract access.
-- Prepared database statements.
-- Server-side validation.
-- CSRF protection.
-- Secure document upload and access controls.
-- Environment-based secret management.
+- Contact details and organization information.
+- Counterparty notes.
+- Related contract records.
+- Search, edit, and archive capabilities.
+- Connections to relevant obligations and payments.
+
+### 5. AI Contract Summarization
+
+Transform extracted contract text into a more readable explanation.
+
+- Executive summary.
+- Plain-English contract explanation.
+- Parties and agreement purpose.
+- Important dates and financial terms.
+- Key responsibilities.
+- Termination and renewal conditions.
+- Important limitations and commitments.
+
+### 6. Clause Classification
+
+Identify and organize relevant contract clauses, including:
+
+- Payment terms.
+- Termination conditions.
+- Confidentiality.
+- Intellectual property.
+- Indemnification.
+- Limitation of liability.
+- Dispute resolution.
+- Governing law.
+- Automatic renewal.
+- Data protection.
+- Penalties and late fees.
+- Force majeure.
+- Service-level commitments.
+
+Each supported finding can be associated with a source quotation for review.
+
+### 7. Risk Findings and Review Workflow
+
+Highlight potentially unfavorable, ambiguous, missing, or unusual contractual terms.
+
+- Low, Medium, and High severity levels.
+- Explanations for flagged clauses.
+- Supporting document excerpts.
+- Suggested follow-up actions.
+- An explainable heuristic risk score.
+- Review status and reviewer notes.
+- Approval and rejection workflow for AI suggestions.
+
+AI-generated findings are recommendations for further review, not definitive legal conclusions.
+
+### 8. Obligation Management
+
+Convert reviewed contractual commitments into trackable tasks.
+
+- Obligation title and description.
+- Linked contract and source clause.
+- Responsible party and internal owner.
+- Due date and priority.
+- Status tracking.
+- Completion notes.
+- Manual obligation creation.
+- Approval of AI-generated obligation suggestions.
+
+### 9. Payments and Renewals
+
+Track contractual financial commitments and important renewal dates.
+
+- Payment amounts and currencies.
+- Payment due dates and statuses.
+- Paid, planned, overdue, and cancelled records.
+- Contract expiry tracking.
+- Renewal and notice deadlines.
+- Upcoming financial commitments.
+
+TermTrail AI tracks contractual payments; it does not process transactions or store payment card information.
+
+### 10. Deadline Calendar and Notifications
+
+- Calendar view for obligations and deadlines.
+- Upcoming expiry and renewal reminders.
+- Payment due-date notifications.
+- Overdue obligation alerts.
+- In-app notification center.
+- Optional email notifications through SMTP.
+- Scheduled reminders through a PHP CLI script and Windows Task Scheduler.
+
+Automatic reminders require the scheduler and relevant configuration to be enabled.
+
+### 11. Evidence-Grounded Contract Copilot
+
+Ask questions about an individual contract in a conversational interface.
+
+Example questions:
+
+- When does this contract expire?
+- What is the termination notice period?
+- Which payment obligations are specified?
+- Does the agreement include automatic renewal?
+- What happens if a party terminates early?
+- Which clauses may require further review?
+
+The retrieval workflow can use stored document chunks, optional embeddings, cosine similarity in PHP, and MySQL FULLTEXT or keyword search as a fallback.
+
+Answers should reference retrieved document passages. When relevant evidence cannot be found, the Copilot should clearly communicate that limitation rather than inventing an answer.
+
+### 12. Contract Version Comparison
+
+- Upload new versions of existing contracts.
+- Maintain version history.
+- Compare extracted contract text.
+- Highlight added and removed text.
+- Review potentially significant changes.
+- Store comparison records for later reference.
+
+The quality of a comparison depends on successful text extraction from both versions.
+
+### 13. Clause Library
+
+- Store reusable clause references.
+- Organize clauses by category.
+- Search and filter templates.
+- Save explanations, notes, and tags.
+- Manage templates according to user permissions.
+
+Templates are reference material and may require professional review before use.
+
+### 14. Reports and Exports
+
+Generate reports for:
+
+- Contract summaries.
+- Risk findings.
+- Upcoming expirations.
+- Obligations and deadlines.
+- Payments.
+- Counterparties.
+- Activity history.
+
+Supported export formats include CSV and PDF, depending on the configured implementation.
+
+### 15. Audit Logs
+
+Maintain a history of important application events.
+
+- Contract creation and modification.
+- Document uploads.
+- Analysis activity.
+- Risk review decisions.
+- Obligation approvals.
+- Payment status changes.
+- Version comparisons.
+- Report exports.
+- Administrative changes.
+
+Access to audit records is restricted according to application permissions.
+
+---
+
+## AI and Document Intelligence
+
+TermTrail AI uses a PHP-based document processing pipeline and an external AI API.
+
+### Processing Pipeline
+
+```text
+Contract Upload
+      |
+      v
+File Validation and Secure Storage
+      |
+      v
+Text Extraction
+(PDF / DOCX / TXT)
+      |
+      v
+Text Cleaning and Chunking
+      |
+      v
+AI Analysis through PHP cURL
+      |
+      v
+Structured JSON Validation
+      |
+      v
+Evidence Verification
+      |
+      v
+MySQL Persistence
+      |
+      v
+Human Review and Approval
+      |
+      v
+Obligations, Deadlines and Reports
+```
+
+### Retrieval-Augmented Generation (RAG)
+
+The Copilot uses a retrieval workflow to ground answers in relevant contract content.
+
+1. Extracted contract text is divided into manageable chunks.
+2. Chunks and their source metadata are stored in MySQL.
+3. Optional embeddings can be generated through a configured API.
+4. Relevant chunks are retrieved using semantic similarity or keyword search.
+5. The LLM receives the question and selected passages.
+6. The response is presented with supporting excerpts where available.
+
+Embeddings are optional. Keyword retrieval can provide a fallback when embedding credentials or services are unavailable.
+
+### AI Reliability Principles
+
+- Validate the structure of AI responses before storing them.
+- Verify evidence quotations against extracted text.
+- Preserve uncertainty instead of inventing missing information.
+- Keep AI suggestions separate from approved commitments.
+- Handle invalid responses, timeouts, and API errors.
+- Never claim that an analysis succeeded when processing failed.
 
 ---
 
@@ -143,332 +328,435 @@ Generate useful outputs for contract review and recordkeeping.
 | Layer | Technologies |
 |---|---|
 | Frontend | HTML5, CSS3, Bootstrap 5, Vanilla JavaScript |
-| Backend | PHP 8.2+ |
-| Database | MySQL, phpMyAdmin |
-| Database access | PHP PDO |
-| Data visualization | Chart.js |
-| PDF reports | Dompdf |
-| AI service | Python, FastAPI |
-| Document processing | PDF/DOCX text extraction and text preprocessing |
-| Retrieval-augmented generation | Embeddings, retrieval, optional ChromaDB |
-| Local LLM option | Ollama |
-| Development environment | XAMPP, Composer, Python virtual environment |
-| Version control | Git and GitHub |
+| Icons | Lucide icons |
+| Charts | Chart.js |
+| Calendar | FullCalendar.js |
+| Backend | PHP 8.2+, PHP cURL |
+| Database | MySQL / MariaDB |
+| Database access | PDO |
+| AI | Gemini API or a configured compatible LLM API |
+| PDF extraction | `smalot/pdfparser` |
+| DOCX extraction | `phpoffice/phpword` |
+| PDF generation | `dompdf/dompdf` |
+| Email | `phpmailer/phpmailer` |
+| Text comparison | `jfcherng/php-diff` |
+| Dependency management | Composer |
+| Local environment | XAMPP for Windows |
+| Testing | PHPUnit |
 
-**Architecture decision:** PHP and MySQL handle the core application, authentication, contract management, obligations, payments, and reporting. The optional Python service provides AI-specific capabilities. Core management features should remain usable when the AI service is unavailable.
+**Architecture decision:** The application uses PHP for its backend and AI integration. It does not require Python, FastAPI, Node.js, React, or a separate frontend server.
 
 ---
 
 ## System Architecture
 
 ```text
-                    USER
-                      |
-                      v
-          HTML + CSS + JavaScript
-                      |
-                      v
-             PHP Application
-              /           \
-             v             v
-       MySQL Database   Document Storage
-             |
-             v
-      Contract Metadata,
-      Obligations, Risks,
-      Payments & Activity
-
-             PHP Application
-                      |
-                      v
-              Python FastAPI
-                      |
-             Document Processing
-                      |
-           Text Extraction / NLP
-                      |
-             Embedding & Retrieval
-                      |
-          Optional LLM / Ollama
-                      |
-                      v
-         Summaries, Risk Insights,
-         Suggested Obligations
-         & Evidence-Based Answers
++--------------------------------------+
+|          Browser / Frontend          |
+| HTML, CSS, Bootstrap, Vanilla JS     |
++------------------+-------------------+
+                   |
+                   | HTTP / Fetch API
+                   v
++--------------------------------------+
+|          PHP Application             |
+| Routing, Authentication, Validation  |
+| Controllers, Models, Services        |
++-----------+------------------+-------+
+            |                  |
+            v                  v
++-------------------+  +----------------------+
+| MySQL / MariaDB   |  | External AI API      |
+| Contracts, Users, |  | Summaries, Clauses,  |
+| Risks, Tasks,     |  | Risk Suggestions,    |
+| Payments, Chunks  |  | Evidence-grounded QA |
++-------------------+  +----------------------+
+            |
+            v
++--------------------------------------+
+| Protected File Storage               |
+| Original Documents, Extracted Text,  |
+| Generated Reports                    |
++--------------------------------------+
 ```
-
-*The diagram represents the intended architecture. Actual capabilities depend on the implemented code and configured services.*
-
----
-
-## Application Workflow
-
-1. **Register or sign in** to access a personal workspace.
-2. **Upload or create a contract** and provide relevant metadata.
-3. **Extract document content** using the supported document-processing pipeline.
-4. **Review AI-generated insights**, including summaries, clause classifications, and potential risks.
-5. **Verify suggested obligations** before adding them to the obligation tracker.
-6. **Monitor deadlines and payments** through the dashboard and calendar.
-7. **Compare versions** when an updated contract becomes available.
-8. **Ask questions and review evidence** using the contract copilot.
-9. **Export reports** for recordkeeping and further review.
 
 ---
 
 ## Project Structure
 
+The following is the intended structure. Actual filenames may vary slightly with the implementation.
+
 ```text
-TermTrail/
+termtrail/
 ├── index.php
-├── login.php
-├── register.php
-├── dashboard.php
-├── contracts.php
-├── contract-details.php
-├── obligations.php
-├── payments.php
-├── calendar.php
-├── copilot.php
-├── reports.php
-├── settings.php
-│
-├── config/
-│   ├── database.php
-│   └── app.php
-│
-├── includes/
-│   ├── header.php
-│   ├── sidebar.php
-│   ├── footer.php
-│   └── functions.php
-│
-├── modules/
-│   ├── auth/
-│   ├── contracts/
-│   ├── analysis/
-│   ├── obligations/
-│   ├── payments/
-│   ├── reminders/
-│   ├── comparison/
-│   ├── copilot/
-│   └── reports/
-│
-├── api/
-├── services/
-├── assets/
-│   ├── css/
-│   ├── js/
-│   └── images/
-│
-├── database/
-│   └── schema.sql
-│
-├── storage/
-│   └── .gitkeep
-│
-├── python_ai/
-│   ├── main.py
-│   ├── requirements.txt
-│   └── .env.example
-│
-├── tests/
+├── .htaccess
 ├── .env.example
 ├── .gitignore
 ├── composer.json
-└── README.md
+├── README.md
+│
+├── frontend/
+│   ├── assets/
+│   │   ├── css/
+│   │   ├── js/
+│   │   └── images/
+│   ├── pages/
+│   └── components/
+│
+├── backend/
+│   ├── config/
+│   ├── middleware/
+│   ├── controllers/
+│   ├── models/
+│   ├── services/
+│   ├── helpers/
+│   └── api/
+│
+├── database/
+│   ├── schema.sql
+│   └── seed.sql
+│
+├── storage/
+│   ├── contracts/
+│   ├── extracted_text/
+│   ├── reports/
+│   └── logs/
+│
+├── cron/
+│   └── reminders.php
+│
+├── tests/
+└── vendor/
 ```
 
-*The exact structure may differ slightly depending on the implementation. Keep this documentation aligned with the files actually generated.*
+The `vendor/` directory is created by Composer. Storage directories must be created and configured before file uploads and report generation are used.
 
 ---
 
-## Installation & Setup
+## Database Design
+
+The database is designed to organize contracts, analysis results, lifecycle activities, and application users.
+
+Core tables include:
+
+| Table | Purpose |
+|---|---|
+| `users` | User accounts and roles |
+| `counterparties` | Organizations and individuals |
+| `contracts` | Contract metadata and status |
+| `contract_versions` | Uploaded versions and version history |
+| `analysis_results` | AI analysis output and summaries |
+| `clauses` | Extracted contract clauses |
+| `risk_findings` | Risk findings and review status |
+| `document_chunks` | Extracted text chunks and optional embeddings |
+| `obligation_suggestions` | AI-generated obligation proposals |
+| `obligations` | Confirmed obligations and deadlines |
+| `payments` | Contractual payment records |
+| `reminders` | Scheduled reminder records |
+| `notifications` | In-app notification data |
+| `review_notes` | Contract review comments |
+| `chat_messages` | Copilot conversation history |
+| `activity_logs` | Audit trail |
+| `version_comparisons` | Comparison records |
+| `clause_templates` | Reusable clause references |
+
+Additional tables may be used for processing jobs, application settings, or other supporting features.
+
+The schema should use foreign keys, indexes, appropriate data types, and transactions where necessary. Uploaded documents are stored as files rather than large binary objects in MySQL.
+
+---
+
+## Getting Started
 
 ### Prerequisites
 
 Install the following:
 
-- [XAMPP](https://www.apachefriends.org/) with PHP and MySQL.
-- [Composer](https://getcomposer.org/).
-- [Python](https://www.python.org/) 3.11 or newer if using the AI service.
+- XAMPP with PHP 8.2 or a compatible PHP 8.x version.
+- MySQL or MariaDB.
+- Composer.
 - A modern web browser.
-- An optional LLM provider or local Ollama installation for AI features that require a language model.
+- An optional Gemini API key for AI functionality.
 
-### 1. Clone the repository
+### Step 1: Place the project in XAMPP
 
-```bash
-git clone https://github.com/YOUR_USERNAME/TermTrail.git
-```
-
-Replace `YOUR_USERNAME` with your GitHub username.
-
-Move the project folder into:
+Copy or clone the project into:
 
 ```text
-C:\xampp\htdocs\TermTrail
+C:\xampp\htdocs\termtrail
 ```
 
-### 2. Start XAMPP
+Start **Apache** and **MySQL** from the XAMPP Control Panel.
 
-Open the XAMPP Control Panel and start:
+### Step 2: Install PHP dependencies
 
-- Apache
-- MySQL
-
-### 3. Create the database
-
-Open phpMyAdmin:
-
-```text
-http://localhost/phpmyadmin
-```
-
-Create a database named:
-
-```text
-termtrail_db
-```
-
-Import the SQL schema from the project’s `database/schema.sql` file.
-
-If the SQL script already creates the database, follow its instructions instead of creating it twice.
-
-### 4. Configure environment variables
-
-Copy `.env.example` to `.env` and configure the database connection and any optional AI provider settings supported by the implementation.
-
-Example configuration:
-
-```env
-APP_NAME=TermTrail AI
-APP_ENV=local
-APP_DEBUG=true
-APP_URL=http://localhost/TermTrail
-
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=termtrail_db
-DB_USERNAME=root
-DB_PASSWORD=
-
-AI_SERVICE_URL=http://127.0.0.1:8000
-LLM_API_KEY=
-```
-
-Use the database credentials configured on your machine. A blank MySQL password is appropriate only if your local development installation is configured that way.
-
-Never commit `.env` or real API keys to GitHub.
-
-### 5. Install PHP dependencies
-
-Open a terminal in the project directory:
+Open PowerShell in the project directory:
 
 ```powershell
-cd C:\xampp\htdocs\TermTrail
+cd C:\xampp\htdocs\termtrail
 composer install
 ```
 
-If the project uses Dompdf, ensure it is included in `composer.json` and installed successfully.
+Ensure Composer uses the same PHP installation as XAMPP. If the command is unavailable, install Composer and configure its PHP executable path.
 
-### 6. Open the application
+### Step 3: Configure PHP extensions
 
-Visit:
+Open the `php.ini` used by XAMPP and check that the required extensions are enabled, including:
+
+- `curl`
+- `fileinfo`
+- `mbstring`
+- `openssl`
+- `pdo_mysql`
+- `zip`
+
+Enable other extensions required by the installed libraries.
+
+Restart Apache after changing `php.ini`.
+
+### Step 4: Create the database
+
+Open:
+
+`http://localhost/phpmyadmin/`
+
+Create a database named:
+
+```sql
+CREATE DATABASE termtrail_db
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+```
+
+Select `termtrail_db` and import:
 
 ```text
-http://localhost/TermTrail/
+database/schema.sql
 ```
 
-Register an account and begin adding contracts.
+To load fictional demonstration data, optionally import:
 
-### 7. Configure the optional Python AI service
-
-If the generated project includes `python_ai/requirements.txt`, open a separate terminal:
-
-```powershell
-cd C:\xampp\htdocs\TermTrail\python_ai
-
-py -3.11 -m venv .venv
-
-.\.venv\Scripts\Activate.ps1
-
-python -m pip install --upgrade pip
-
-pip install -r requirements.txt
+```text
+database/seed.sql
 ```
 
-Start the service using the entry point actually provided by the project. For a FastAPI application exposing `app` in `main.py`, the command is:
+Review the seed file and demo credentials before using them. Do not import seed data repeatedly into an existing database unless the seed process is designed to be repeatable.
 
-```powershell
-uvicorn main:app --reload --host 127.0.0.1 --port 8000
+### Step 5: Configure environment variables
+
+Copy `.env.example` to `.env` and configure your local values.
+
+Example:
+
+```dotenv
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_NAME=termtrail_db
+DB_USER=root
+DB_PASS=
+
+APP_URL=http://localhost/termtrail
+APP_ENV=development
+
+GEMINI_API_KEY=
+GEMINI_MODEL=
+
+EMBEDDING_API_KEY=
+
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_USERNAME=
+SMTP_PASSWORD=
+SMTP_ENCRYPTION=tls
 ```
 
-If PowerShell blocks virtual-environment activation, use the appropriate local execution-policy adjustment or run the virtual environment's Python executable directly.
+These are example settings, not guaranteed credentials for every installation. Use the database username and password configured on your machine.
 
-The AI service and model provider must be configured before their dependent features can work. Contract management should continue to operate without them.
+Add `.env` to `.gitignore`. Never commit actual API keys, database passwords, SMTP credentials, or private documents.
+
+### Step 6: Prepare file storage
+
+Create the required directories if they do not already exist:
+
+```text
+storage/contracts/
+storage/extracted_text/
+storage/reports/
+storage/logs/
+```
+
+Ensure the PHP process can write to the necessary directories.
+
+Private contracts must not be publicly downloadable through guessed URLs. Use protected storage and authorized PHP download routes. If storage resides under the project directory, configure access restrictions appropriately.
+
+### Step 7: Launch the application
+
+Open:
+
+**http://localhost/termtrail/**
+
+Register an account or use the demo account documented in the seed data.
+
+### Step 8: Configure optional AI analysis
+
+Add a valid AI API key and supported model identifier to `.env`.
+
+AI features require internet connectivity and a valid provider configuration. If no key is configured, supported manual workflows and fallback functionality should remain available.
+
+### Step 9: Configure scheduled reminders
+
+For automated reminders, configure Windows Task Scheduler to execute the PHP CLI script:
+
+```text
+C:\xampp\php\php.exe
+```
+
+with the script argument:
+
+```text
+C:\xampp\htdocs\termtrail\cron\reminders.php
+```
+
+Set a suitable schedule and test the script manually before relying on automatic reminders. Configure SMTP separately if email notifications are needed.
 
 ---
 
-## Security & Responsible AI
+## How It Works
 
-TermTrail AI is intended to assist with document understanding and contract organization.
+### Contract Analysis Workflow
 
-- AI-generated summaries and findings may be incomplete or incorrect.
-- Risk classifications are indicators for human review, not legal conclusions.
-- Always verify important clauses, obligations, and dates against the original document.
-- Do not treat extracted deadlines as confirmed until they have been reviewed.
-- Avoid uploading confidential documents to third-party AI providers without appropriate authorization.
-- Protect uploaded documents and credentials.
-- Seek advice from a qualified legal professional for legal interpretation or decisions.
+1. The user uploads a supported contract.
+2. PHP validates the file and saves it in protected storage.
+3. A document parser extracts available text.
+4. The text is cleaned and divided into chunks.
+5. The configured AI provider generates structured analysis.
+6. PHP validates the response and supporting evidence.
+7. Analysis results are saved in MySQL.
+8. The user reviews summaries, clauses, and risk findings.
+9. Approved obligation suggestions become trackable commitments.
+10. The user manages deadlines, payments, renewals, and reports.
+
+### Copilot Workflow
+
+1. The user asks a question within a contract.
+2. The application retrieves relevant stored text chunks.
+3. Optional embeddings improve semantic retrieval.
+4. Relevant passages are supplied to the LLM.
+5. The response is displayed with available source evidence.
+6. The user can inspect the referenced text to verify the answer.
+
+### Lifecycle Workflow
+
+```text
+Upload
+  |
+  v
+Extract and Analyze
+  |
+  v
+Review Findings
+  |
+  v
+Approve Commitments
+  |
+  v
+Track Obligations and Payments
+  |
+  v
+Monitor Deadlines and Renewals
+  |
+  v
+Compare Versions and Generate Reports
+```
+
+---
+
+## Security
+
+Security is an essential part of the application.
+
+TermTrail AI should implement:
+
+- Prepared statements through PDO.
+- Password hashing and verification.
+- Session-based authentication.
+- CSRF protection for state-changing requests.
+- Server-side input validation.
+- HTML output escaping.
+- File type, size, and upload validation.
+- Randomized stored filenames.
+- Protected document downloads.
+- Role and record ownership checks.
+- Environment-based secret management.
+- Restricted access to private files and configuration.
+- Safe error handling and application logging.
+- Appropriate authorization for reports and audit logs.
+
+Uploaded documents and AI responses must be treated as untrusted input.
+
+For production deployment, use HTTPS, production-grade database credentials, secure server configuration, and an appropriate backup and recovery strategy.
 
 ---
 
 ## Testing
 
-Verify the implemented application using the following checks:
+Run the test suite using the configured PHPUnit installation:
 
-- Registration, login, and logout.
-- Access control between different user accounts.
-- Contract creation, upload, editing, and archiving.
-- PDF, DOCX, and TXT text extraction.
-- Handling of invalid and oversized uploads.
-- AI analysis success and failure cases.
-- Risk findings and supporting evidence.
-- Obligation approval, updates, and completion.
-- Payment and renewal tracking.
-- Contract version comparison.
-- PDF report generation and CSV export.
-- Database validation and error handling.
-- Responsive layout and navigation.
+```powershell
+vendor\bin\phpunit
+```
 
-Only mark tests as passed after they have actually been executed.
+The test configuration may require a separate test database and environment variables.
+
+Recommended test areas:
+
+- Authentication and session behavior.
+- Role and ownership enforcement.
+- Contract CRUD operations.
+- Upload validation.
+- AI response validation.
+- Evidence verification.
+- Risk score calculation.
+- Obligation approval.
+- Date and amount extraction.
+- Version comparison.
+- CSV formula escaping.
+- Unauthorized document access.
+
+Test against fictional records and a dedicated test database rather than production or personal data.
 
 ---
 
-## Current Development Status
+## Limitations
 
-TermTrail AI is designed as a full-stack project combining contract lifecycle management with AI-powered document intelligence.
-
-Implementation status should be updated according to the actual repository. Do not label planned or partially implemented features as production-ready.
+- AI analysis depends on the configured provider, model, API quota, and network availability.
+- Scanned PDFs and image-based contracts require OCR, which is outside the default text-extraction workflow.
+- Extracted text may lose some original formatting or layout.
+- Complex tables, handwritten text, and unusual document structures may not extract reliably.
+- Risk scores are heuristic indicators, not legally validated assessments.
+- Copilot accuracy depends on extraction quality and retrieval relevance.
+- Embedding-based retrieval requires a compatible embedding provider; keyword search is the fallback.
+- Email notifications require SMTP configuration.
+- Automatic reminders require Windows Task Scheduler configuration.
+- Local XAMPP configuration is suitable for development and demonstration, not automatically production-ready.
 
 ---
 
 ## Future Enhancements
 
-- OCR support for scanned contracts.
-- Improved semantic contract-version comparison.
-- Advanced hybrid retrieval and reranking for contract question answering.
-- Configurable team workspaces and role-based permissions.
-- Email and calendar integrations.
-- Customizable contract review policies.
-- More advanced audit trails and compliance reporting.
-- Multilingual document understanding.
+Potential future improvements include:
 
----
-
-## Why TermTrail AI?
-
-TermTrail AI brings document understanding and ongoing contract management together. Rather than stopping at a generated summary, it helps users follow contractual commitments, review potentially important terms, and keep track of deadlines throughout a contract's lifecycle.
-
-**Built to make complex contracts easier to understand and commitments easier to manage.**
+- OCR for scanned contracts.
+- Multilingual contract summarization.
+- Improved semantic retrieval and reranking.
+- Advanced contract comparison with clause-level change detection.
+- Configurable approval workflows.
+- More granular team permissions.
+- Secure cloud storage integration.
+- Calendar provider integration.
+- Advanced reporting and analytics.
+- Additional document formats.
+- Improved evaluation of AI extraction accuracy.
+- Automated backup and restore workflows.
 
 ---
