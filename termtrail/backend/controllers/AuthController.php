@@ -6,6 +6,7 @@ use TermTrail\config\Database;
 use TermTrail\helpers\{Audit, Response, Validator};
 use TermTrail\middleware\Auth;
 use TermTrail\models\UserModel;
+use TermTrail\services\SettingsService;
 
 final class AuthController
 {
@@ -25,6 +26,7 @@ final class AuthController
     public static function register(array $in): never
     {
         Auth::requireCsrf();
+        if (!SettingsService::registrationOpen()) { Response::error('Registration is closed. Ask an administrator to create an account for you.', 403); }
         $name = trim((string)($in['name'] ?? ''));
         $email = strtolower(trim((string)($in['email'] ?? '')));
         $pass = (string)($in['password'] ?? '');

@@ -1,6 +1,6 @@
 <?php
 use TermTrail\helpers\Security as S;
-$title = 'Account settings'; $active = 'settings';
+$title = 'Account settings'; $active = 'settings'; $scripts = $user['role'] === 'admin' ? ['settings.js'] : [];
 require __DIR__ . '/../components/app_shell_start.php';
 ?>
 <div class="page-head"><h1 class="h3">Account settings</h1></div>
@@ -35,4 +35,18 @@ require __DIR__ . '/../components/app_shell_start.php';
       <button class="btn btn-primary" type="submit"><span class="btn-label">Update password</span></button>
     </form></div></div>
 </div>
+<?php if ($user['role'] === 'admin'): ?>
+<div class="glass p-4 mt-3" id="aiCard">
+  <h2 class="h6 mb-2">AI service</h2>
+  <p class="text-muted small mb-2">AI analysis and Copilot answers need <code>GEMINI_API_KEY</code> in <code>.env</code> (the key stays on the server). Without it the app still works: you get basic date/amount suggestions and Copilot shows the most relevant contract passages.</p>
+  <dl class="dl-grid mb-0"><dt>AI analysis</dt><dd id="aiState">Loading…</dd><dt>Model</dt><dd id="aiModel">—</dd><dt>Semantic search</dt><dd id="aiEmb">—</dd></dl>
+</div>
+<div class="glass p-4 mt-3" id="reminderCard">
+  <h2 class="h6 mb-2">Reminders</h2>
+  <p class="text-muted small mb-2">Reminders (expiries, renewal notice deadlines, payments, obligations) are only created when the reminder job runs. Scheduled reminders are <strong>not active</strong> until you set up Windows Task Scheduler for <code>cron/reminders.php</code> (see README).</p>
+  <dl class="dl-grid mb-3"><dt>Last run</dt><dd id="remLast">Loading…</dd><dt>Email (SMTP)</dt><dd id="remMail">Loading…</dd></dl>
+  <button class="btn btn-outline-secondary btn-sm" id="runRem"><span class="btn-label">Run reminder check now</span></button>
+  <div class="small mt-2" id="remResult" role="status"></div>
+</div>
+<?php endif; ?>
 <?php require __DIR__ . '/../components/app_shell_end.php'; ?>

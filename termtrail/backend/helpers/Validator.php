@@ -19,4 +19,19 @@ final class Validator
         $len = mb_strlen(trim($v));
         return $len >= 2 && $len <= 120;
     }
+
+    public static function date(?string $v): bool
+    {
+        if (!preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', (string)$v, $m)) { return false; }
+        return checkdate((int)$m[2], (int)$m[3], (int)$m[1]);
+    }
+
+    /** Positive decimal with up to 2 places (commas tolerated). Returns normalized string or null. */
+    public static function amount(string $v, bool $allowZero = false): ?string
+    {
+        $v = str_replace(',', '', trim($v));
+        if (!preg_match('/^\d{1,13}(\.\d{1,2})?$/', $v)) { return null; }
+        if (!$allowZero && (float)$v <= 0) { return null; }
+        return $v;
+    }
 }

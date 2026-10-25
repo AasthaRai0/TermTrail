@@ -11,6 +11,7 @@ $theme = $user['theme'] ?? 'dark';
 <meta name="app-url" content="<?= S::e(APP_URL) ?>">
 <title><?= S::e($title ?? 'TermTrail AI') ?> · TermTrail AI</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="<?= APP_URL ?>/frontend/assets/images/favicon.svg">
 <link href="<?= APP_URL ?>/frontend/assets/css/style.css" rel="stylesheet">
 <link href="<?= APP_URL ?>/frontend/assets/css/components.css" rel="stylesheet">
 <link href="<?= APP_URL ?>/frontend/assets/css/responsive.css" rel="stylesheet">

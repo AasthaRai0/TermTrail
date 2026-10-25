@@ -18,7 +18,9 @@ require __DIR__ . '/../components/header.php';
     <div class="alert alert-danger d-none" role="alert" data-form-error></div>
     <button class="btn btn-primary w-100" type="submit"><span class="btn-label">Sign in</span></button>
   </form>
+  <?php if (\TermTrail\services\SettingsService::registrationOpen()): ?>
   <p class="mt-3 mb-0 small text-muted">New here? <a href="<?= APP_URL ?>/index.php?page=register">Create an account</a></p>
+  <?php else: ?><p class="mt-3 mb-0 small text-muted">Need an account? Ask your administrator.</p><?php endif; ?>
 </main>
 <script src="<?= APP_URL ?>/frontend/assets/js/app.js"></script>
 </body></html>

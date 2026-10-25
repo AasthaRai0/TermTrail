@@ -2,6 +2,13 @@
 use TermTrail\helpers\Security as S;
 $title = 'Dashboard'; $active = 'dashboard';
 require __DIR__ . '/../components/app_shell_start.php';
+$links = [
+  'total_contracts' => ['contracts', []], 'active_contracts' => ['contracts', ['status' => 'active']],
+  'expiring_soon' => ['contracts', ['quick' => 'expiring']], 'expired_contracts' => ['contracts', ['quick' => 'expired']],
+  'awaiting_review' => ['contracts', ['status' => 'under_review']], 'high_risk' => ['contracts', ['risk' => 'high']],
+  'open_obligations' => ['obligations', ['status' => 'active']], 'overdue_obligations' => ['obligations', ['status' => 'overdue']],
+  'upcoming_payments' => ['payments', ['status' => 'upcoming']],
+];
 $cards = [
   ['total_contracts','file-text','Total contracts'], ['active_contracts','badge-check','Active'],
   ['expiring_soon','hourglass','Expiring in 30 days'], ['expired_contracts','calendar-x','Expired'],
@@ -11,10 +18,20 @@ $cards = [
 ];
 ?>
 <div class="page-head"><div><h1 class="h3 mb-1">Dashboard</h1><p class="text-muted mb-0">Live overview of your contracts and commitments.</p></div></div>
+<div class="d-flex gap-2 flex-wrap mb-3">
+  <?php if (in_array($user['role'], ['admin','manager'], true)): ?>
+  <a class="btn btn-primary btn-sm" href="<?= APP_URL ?>/index.php?page=contract_new">New contract</a>
+  <a class="btn btn-outline-secondary btn-sm" href="<?= APP_URL ?>/index.php?page=obligation_new">New obligation</a>
+  <a class="btn btn-outline-secondary btn-sm" href="<?= APP_URL ?>/index.php?page=payments&new=1">Add payment</a>
+  <a class="btn btn-outline-secondary btn-sm" href="<?= APP_URL ?>/index.php?page=counterparties">Add counterparty</a>
+  <?php endif; ?>
+  <a class="btn btn-outline-secondary btn-sm" href="<?= APP_URL ?>/index.php?page=contracts">Browse contracts</a>
+</div>
 <div class="row g-3 mb-4" id="statCards">
   <?php foreach ($cards as [$k, $icon, $label]): ?>
-  <div class="col-6 col-lg-4 col-xl-3"><div class="stat-card glass"><i data-lucide="<?= $icon ?>"></i>
-    <div><div class="stat-value" data-stat="<?= $k ?>">–</div><div class="stat-label"><?= S::e($label) ?></div></div></div></div>
+  <?php $href = isset($links[$k]) ? APP_URL . '/index.php?' . http_build_query(['page' => $links[$k][0]] + $links[$k][1]) : null; ?>
+  <div class="col-6 col-lg-4 col-xl-3"><<?= $href ? 'a href="' . S::e($href) . '"' : 'div' ?> class="stat-card glass"><i data-lucide="<?= $icon ?>"></i>
+    <div><div class="stat-value" data-stat="<?= $k ?>">–</div><div class="stat-label"><?= S::e($label) ?></div></div></<?= $href ? 'a' : 'div' ?>></div>
   <?php endforeach; ?>
 </div>
 <div class="row g-3 mb-4">
@@ -28,7 +45,7 @@ $cards = [
   <div class="col-lg-5"><div class="glass p-3 mb-3"><h2 class="h6">Upcoming deadlines</h2><ul class="list-clean" id="deadlineList"></ul></div>
     <div class="glass p-3"><h2 class="h6">Your recent activity</h2><ul class="list-clean" id="activityList"></ul></div></div>
 </div>
-<div class="alert alert-info mt-4 small mb-0" role="note">Dashboard figures are calculated live from your database. Contract, obligation and payment modules arrive in the next build phases.</div>
+<div class="alert alert-info mt-4 small mb-0" role="note">Dashboard figures are calculated live from your database. Click any card, chart segment or row to open the matching filtered view.</div>
 <?php
 $scripts = ['dashboard.js'];
 ?>

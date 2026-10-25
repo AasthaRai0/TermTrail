@@ -19,7 +19,8 @@ spl_autoload_register(function (string $class): void {
 use TermTrail\helpers\Env;
 use TermTrail\helpers\Security;
 
-Env::load(ROOT_PATH . '/.env');
+// Tests never read the real .env (they use the environment set in phpunit.xml).
+Env::load(defined('TT_TESTING') ? ROOT_PATH . '/.env.testing' : ROOT_PATH . '/.env');
 
 define('APP_ENV', Env::get('APP_ENV', 'production'));
 define('APP_URL', rtrim(Env::get('APP_URL', 'http://localhost/termtrail'), '/'));
@@ -30,4 +31,4 @@ ini_set('log_errors', '1');
 ini_set('error_log', STORAGE_PATH . '/logs/php-error.log');
 error_reporting(E_ALL);
 
-Security::startSession();
+if (PHP_SAPI !== 'cli') { Security::startSession(); }

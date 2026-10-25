@@ -2,9 +2,18 @@
 use TermTrail\helpers\Security as S;
 require __DIR__ . '/header.php';
 $nav = [
-    ['dashboard', 'layout-dashboard', 'Dashboard'],
-    ['settings',  'settings',         'Settings'],
+    ['dashboard',      'layout-dashboard', 'Dashboard'],
+    ['contracts',      'file-text',        'Contracts'],
+    ['counterparties', 'building-2',       'Counterparties'],
+    ['obligations',    'list-checks',      'Obligations'],
+    ['payments',       'wallet',           'Payments'],
+    ['renewals',       'refresh-cw',       'Renewals'],
+    ['calendar',       'calendar-days',    'Calendar'],
+    ['clause_library', 'book-open',        'Clause library'],
+    ['reports',        'file-bar-chart',   'Reports'],
 ];
+if ($user['role'] === 'admin') { $nav[] = ['admin_users', 'users', 'Users']; $nav[] = ['audit', 'shield-check', 'Audit log']; }
+$nav[] = ['settings', 'settings', 'Settings'];
 $initial = strtoupper(mb_substr($user['name'], 0, 1));
 ?>
 <body class="app-body">
@@ -25,7 +34,20 @@ $initial = strtoupper(mb_substr($user['name'], 0, 1));
   <div class="main-col">
     <header class="topbar">
       <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation"><i data-lucide="menu"></i></button>
+      <form class="top-search" action="<?= APP_URL ?>/index.php" method="get" role="search">
+        <input type="hidden" name="page" value="contracts">
+        <i data-lucide="search"></i><input class="form-control" type="search" name="q" placeholder="Search contracts…" aria-label="Search contracts" maxlength="100">
+      </form>
       <div class="flex-grow-1"></div>
+      <div class="dropdown" id="notifWrap">
+        <button class="icon-btn position-relative" id="notifBtn" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="Notifications">
+          <i data-lucide="bell"></i><span class="notif-badge d-none" id="notifBadge">0</span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end notif-menu">
+          <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom notif-head"><strong>Notifications</strong><button class="btn btn-link btn-sm p-0" id="notifReadAll">Mark all read</button></div>
+          <ul class="list-unstyled mb-0" id="notifList"><li class="px-3 py-3 text-muted small">Loading…</li></ul>
+        </div>
+      </div>
       <button class="icon-btn" id="themeToggle" aria-label="Toggle light or dark mode"><i data-lucide="sun-moon"></i></button>
       <div class="dropdown">
         <button class="user-chip dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

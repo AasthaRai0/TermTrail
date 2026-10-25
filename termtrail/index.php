@@ -14,6 +14,23 @@ $pages = [
     'register'  => ['register.php', true],
     'dashboard' => ['dashboard.php', false],
     'settings'  => ['settings.php', false],
+    'contracts'         => ['contracts.php', false],
+    'contract_new'      => ['contract_form.php', false, 'manager'],
+    'contract_edit'     => ['contract_form.php', false, 'manager'],
+    'contract_view'     => ['contract_view.php', false],
+    'counterparties'    => ['counterparties.php', false],
+    'counterparty_view' => ['counterparty_view.php', false],
+    'obligations'       => ['obligations.php', false],
+    'obligation_new'    => ['obligation_form.php', false, 'manager'],
+    'obligation_edit'   => ['obligation_form.php', false, 'manager'],
+    'obligation_view'   => ['obligation_view.php', false],
+    'payments'          => ['payments.php', false],
+    'renewals'          => ['renewals.php', false],
+    'calendar'          => ['calendar.php', false],
+    'clause_library'    => ['clause_library.php', false],
+    'reports'           => ['reports.php', false],
+    'admin_users'       => ['admin_users.php', false, 'admin'],
+    'audit'             => ['audit.php', false, 'admin'],
 ];
 
 $page = (string)($_GET['page'] ?? '');
@@ -30,12 +47,12 @@ try {
         require __DIR__ . '/frontend/pages/notfound.php';
         exit;
     }
-    [$file, $public] = $pages[$page];
+    [$file, $public, $minRole] = $pages[$page] + [2 => 'viewer'];
     if ($public) {
         if (Auth::user()) { header('Location: ' . APP_URL . '/index.php?page=dashboard'); exit; }
         $user = null;
     } else {
-        $user = Auth::requirePage();
+        $user = Auth::requirePage($minRole);
     }
     require __DIR__ . '/frontend/pages/' . $file;
 } catch (\RuntimeException $e) {

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php" colors="true" beStrictAboutOutputDuringTests="false">
+  <testsuites>
+    <testsuite name="TermTrail">
+      <directory suffix="Test.php">tests</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <!-- A SEPARATE database. The bootstrap refuses to run unless the name ends with _test. -->
+    <env name="DB_HOST" value="127.0.0.1"/>
+    <env name="DB_PORT" value="3306"/>
+    <env name="DB_NAME" value="termtrail_test"/>
+    <env name="DB_USER" value="root"/>
+    <env name="DB_PASS" value=""/>
+    <env name="APP_ENV" value="testing"/>
+    <env name="APP_URL" value="http://localhost/termtrail"/>
+    <env name="GEMINI_API_KEY" value=""/>
+    <env name="EMBEDDING_API_KEY" value=""/>
+    <env name="SMTP_HOST" value=""/>
+  </php>
+</phpunit>

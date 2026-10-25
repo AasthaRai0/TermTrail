@@ -5,6 +5,7 @@ namespace TermTrail\controllers;
 use TermTrail\config\Database;
 use TermTrail\helpers\Response;
 use TermTrail\middleware\Auth;
+use TermTrail\services\Lifecycle;
 
 final class DashboardController
 {
@@ -18,6 +19,7 @@ final class DashboardController
     public static function stats(): never
     {
         $u = Auth::requireApi();
+        Lifecycle::sync();
         $pdo = Database::pdo();
         [$w, $p] = self::scope($u);
         $q = function (string $sql, array $extra = []) use ($pdo, $p): int {
@@ -45,9 +47,20 @@ final class DashboardController
         $risk = $rows("SELECT COALESCE(c.risk_level,'unassessed') AS label, COUNT(*) AS value $base GROUP BY label");
         $monthly = $rows("SELECT DATE_FORMAT(c.created_at,'%Y-%m') AS label, COUNT(*) AS value $base AND c.created_at >= (CURDATE() - INTERVAL 11 MONTH) GROUP BY label ORDER BY label");
         $recent = $rows("SELECT c.id,c.title,c.status,c.risk_level,c.expiry_date,cp.name AS counterparty FROM contracts c LEFT JOIN counterparties cp ON cp.id=c.counterparty_id WHERE $w AND c.is_archived=0 ORDER BY c.created_at DESC LIMIT 6");
-        $deadlines = $rows("SELECT * FROM (
-            SELECT 'Contract expiry' AS kind, c.title AS title, c.expiry_date AS due, c.id AS contract_id FROM contracts c WHERE $w AND c.is_archived=0 AND c.expiry_date >= CURDATE()
-            ) d ORDER BY due ASC LIMIT 6");
+        $dp = array_merge($p, $p, $p, $p);
+        $dst = $pdo->prepare("SELECT * FROM (
+            SELECT 'Contract expiry' AS kind, c.title AS title, c.expiry_date AS due, c.id AS link_id, 'contract_view' AS link_page FROM contracts c WHERE $w AND c.is_archived=0 AND c.status IN ('active','under_review') AND c.expiry_date >= CURDATE()
+            UNION ALL
+            SELECT 'Renewal notice deadline', c.title, DATE_SUB(COALESCE(c.renewal_date,c.expiry_date), INTERVAL c.notice_period_days DAY), c.id, 'renewals' FROM contracts c
+              WHERE $w AND c.is_archived=0 AND c.status IN ('active','under_review') AND c.renewal_decision='pending' AND c.notice_period_days IS NOT NULL AND COALESCE(c.renewal_date,c.expiry_date) IS NOT NULL
+              AND DATE_SUB(COALESCE(c.renewal_date,c.expiry_date), INTERVAL c.notice_period_days DAY) >= CURDATE()
+            UNION ALL
+            SELECT 'Obligation due', o.title, o.due_date, o.id, 'obligation_view' FROM obligations o JOIN contracts c ON c.id=o.contract_id WHERE $w AND c.is_archived=0 AND o.status IN ('open','overdue') AND o.due_date >= CURDATE()
+            UNION ALL
+            SELECT 'Payment due', CONCAT(y.currency,' ',y.amount,' - ',c.title), y.due_date, y.id, 'payments' FROM payments y JOIN contracts c ON c.id=y.contract_id WHERE $w AND c.is_archived=0 AND y.status IN ('planned','due') AND y.due_date >= CURDATE()
+            ) d ORDER BY due ASC LIMIT 8");
+        $dst->execute($dp);
+        $deadlines = $dst->fetchAll();
 
         $st = $pdo->prepare('SELECT al.action, al.entity_type, al.created_at, u.name FROM activity_logs al LEFT JOIN users u ON u.id=al.user_id WHERE al.user_id=? ORDER BY al.id DESC LIMIT 8');
         $st->execute([$u['id']]);
