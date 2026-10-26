@@ -15,6 +15,7 @@
     <env name="APP_ENV" value="testing"/>
     <env name="APP_URL" value="http://localhost/termtrail"/>
     <env name="GEMINI_API_KEY" value=""/>
+    <env name="GROQ_API_KEY" value=""/>
     <env name="EMBEDDING_API_KEY" value=""/>
     <env name="SMTP_HOST" value=""/>
   </php>
