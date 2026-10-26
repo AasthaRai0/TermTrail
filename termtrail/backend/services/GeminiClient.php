@@ -4,32 +4,34 @@ namespace TermTrail\services;
 
 use TermTrail\helpers\Env;
 
-/** Minimal Gemini REST client over cURL. API keys stay on the server and are sent in a header, never in the URL. */
+/** Groq REST client over cURL (compatible with OpenAI format). */
 final class GeminiClient
 {
-    public static function apiKey(): string { return (string)Env::get('GEMINI_API_KEY', ''); }
+    public static function apiKey(): string { return (string)Env::get('GROQ_API_KEY', Env::get('GEMINI_API_KEY', '')); }
     public static function configured(): bool { return self::apiKey() !== ''; }
-    public static function embeddingKey(): string { return (string)Env::get('EMBEDDING_API_KEY', ''); }
+    public static function embeddingKey(): string { return (string)Env::get('EMBEDDING_API_KEY', self::apiKey()); }
     public static function embeddingsConfigured(): bool { return self::embeddingKey() !== ''; }
-    public static function model(): string { return Env::get('GEMINI_MODEL') ?: 'gemini-2.0-flash'; }
+    public static function model(): string { return Env::get('GROQ_MODEL') ?: 'llama-3.3-70b-versatile'; }
     public static function embeddingModel(): string { return Env::get('GEMINI_EMBEDDING_MODEL') ?: 'text-embedding-004'; }
-    private static function base(): string { return rtrim(Env::get('GEMINI_API_BASE') ?: 'https://generativelanguage.googleapis.com/v1beta', '/'); }
+    private static function base(): string { return rtrim(Env::get('GROQ_API_BASE') ?: 'https://api.groq.com/openai/v1', '/'); }
 
     /** @throws AiException */
     public static function generate(string $system, string $user, int $maxTokens = 4096): string
     {
         if (!self::configured()) { throw new AiException('The AI service is not configured.'); }
+        
         $body = [
-            'systemInstruction' => ['parts' => [['text' => $system]]],
-            'contents' => [['role' => 'user', 'parts' => [['text' => mb_substr($user, 0, 80000)]]]],
-            'generationConfig' => ['temperature' => 0.1, 'maxOutputTokens' => $maxTokens, 'responseMimeType' => 'application/json'],
+            'model' => self::model(),
+            'messages' => [
+                ['role' => 'system', 'content' => $system],
+                ['role' => 'user', 'content' => mb_substr($user, 0, 80000)]
+            ],
+            'temperature' => 0.1,
+            'max_tokens' => $maxTokens
         ];
-        $data = self::post('/models/' . rawurlencode(self::model()) . ':generateContent', $body, self::apiKey());
-        if (!empty($data['promptFeedback']['blockReason'])) { throw new AiException('The AI provider declined to process this text.'); }
-        $parts = $data['candidates'][0]['content']['parts'] ?? null;
-        if (!is_array($parts)) { throw new AiException('The AI provider returned an empty response.'); }
-        $text = '';
-        foreach ($parts as $p) { if (isset($p['text']) && is_string($p['text'])) { $text .= $p['text']; } }
+
+        $data = self::post('/chat/completions', $body, self::apiKey());
+        $text = $data['choices'][0]['message']['content'] ?? '';
         if (trim($text) === '') { throw new AiException('The AI provider returned an empty response.'); }
         return $text;
     }
@@ -37,14 +39,7 @@ final class GeminiClient
     /** @param string[] $texts @return array[] one float vector per text @throws AiException */
     public static function embed(array $texts): array
     {
-        if (!self::embeddingsConfigured()) { throw new AiException('Embeddings are not configured.'); }
-        $model = self::embeddingModel();
-        $reqs = array_map(fn($t) => ['model' => 'models/' . $model, 'content' => ['parts' => [['text' => mb_substr((string)$t, 0, 8000)]]]], array_values($texts));
-        $data = self::post('/models/' . rawurlencode($model) . ':batchEmbedContents', ['requests' => $reqs], self::embeddingKey());
-        $out = [];
-        foreach (($data['embeddings'] ?? []) as $e) { $out[] = $e['values'] ?? null; }
-        if (count($out) !== count($texts)) { throw new AiException('The embedding provider returned an unexpected response.'); }
-        return $out;
+        throw new AiException('Embeddings are not supported on Groq endpoint directly.');
     }
 
     private static function post(string $path, array $body, string $key): array
@@ -57,7 +52,7 @@ final class GeminiClient
             $ch = curl_init($url);
             curl_setopt_array($ch, [
                 CURLOPT_POST => true, CURLOPT_RETURNTRANSFER => true, CURLOPT_CONNECTTIMEOUT => 10, CURLOPT_TIMEOUT => 60,
-                CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'x-goog-api-key: ' . $key],
+                CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'Authorization: Bearer ' . $key],
                 CURLOPT_POSTFIELDS => json_encode($body, JSON_UNESCAPED_UNICODE),
             ]);
             $raw = curl_exec($ch);
@@ -82,8 +77,8 @@ final class GeminiClient
             }
             throw new AiException(match (true) {
                 in_array($status, [401, 403], true) => 'The AI API key is invalid or not permitted.',
-                $status === 404 => 'The configured AI model was not found. Check GEMINI_MODEL in .env.',
-                default => 'The AI provider rejected the request.',
+                $status === 404 => 'The configured AI model was not found. Check GROQ_MODEL in .env.',
+                default => 'The AI provider rejected the request (' . $detail . ').',
             });
         }
         throw $last ?? new AiException('The AI request failed.');
