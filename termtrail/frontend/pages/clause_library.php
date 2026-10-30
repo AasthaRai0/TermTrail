@@ -8,7 +8,6 @@ require __DIR__ . '/../components/app_shell_start.php';
   <div><h1 class="h3 mb-1">Clause library</h1><p class="text-muted mb-0">Shared reference clauses with plain-English explanations.</p></div>
   <?php if ($canWrite): ?><button class="btn btn-primary" id="addBtn"><i data-lucide="plus" class="me-1" style="width:16px;height:16px"></i>Add template</button><?php endif; ?>
 </div>
-<div class="alert alert-warning small" role="note"><strong>Reference material only.</strong> These templates are examples, not guaranteed legally suitable language. Have a qualified professional review any clause before you use it.</div>
 <div class="glass p-3 mb-3"><div class="row g-2 align-items-end">
   <div class="col-md-5"><label class="form-label" for="tq">Search</label><input class="form-control" id="tq" placeholder="Name, clause text, tags"></div>
   <div class="col-md-4"><label class="form-label" for="tcat">Category</label><select class="form-select" id="tcat"><option value="">All categories</option></select></div>

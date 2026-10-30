@@ -28,7 +28,6 @@ $initial = strtoupper(mb_substr($user['name'], 0, 1));
         </a>
       <?php endforeach; ?>
     </nav>
-    <div class="sidebar-foot small text-muted">Informational assistance only — not legal advice.</div>
   </aside>
   <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
   <div class="main-col">

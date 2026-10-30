@@ -11,5 +11,4 @@ require __DIR__ . '/../components/app_shell_start.php';
 <div class="glass p-2 p-md-3"><div class="table-responsive"><table class="table table-hover align-middle mb-0">
   <thead><tr><th>Contract</th><th>Counterparty</th><th>Key date</th><th>Notice deadline</th><th style="min-width:170px">Decision</th></tr></thead>
   <tbody id="rows"><tr><td colspan="5" class="text-center text-muted py-4">Loading…</td></tr></tbody></table></div></div>
-<p class="small text-muted mt-3 mb-0">The key date is the renewal date if set, otherwise the expiry date. The notice deadline is the key date minus the contract's notice period. Only active and under-review contracts are shown.</p>
 <?php require __DIR__ . '/../components/app_shell_end.php'; ?>

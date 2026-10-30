@@ -43,9 +43,7 @@ $cards = [
   <div class="col-lg-7"><div class="glass p-3"><h2 class="h6">Recent contracts</h2>
     <div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th>Title</th><th>Counterparty</th><th>Status</th><th>Expiry</th></tr></thead><tbody id="recentBody"></tbody></table></div></div></div>
   <div class="col-lg-5"><div class="glass p-3 mb-3"><h2 class="h6">Upcoming deadlines</h2><ul class="list-clean" id="deadlineList"></ul></div>
-    <div class="glass p-3"><h2 class="h6">Your recent activity</h2><ul class="list-clean" id="activityList"></ul></div></div>
 </div>
-<div class="alert alert-info mt-4 small mb-0" role="note">Dashboard figures are calculated live from your database. Click any card, chart segment or row to open the matching filtered view.</div>
 <?php
 $scripts = ['dashboard.js'];
 ?>
