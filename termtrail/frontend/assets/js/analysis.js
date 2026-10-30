@@ -127,8 +127,7 @@
     else if (j && j.stage === 'failed') { banner = '<div class="alert alert-danger mb-0" role="alert"><strong>Analysis failed:</strong> ' + h(j.error_message || 'Unknown error') + (a ? ' Previous results are shown below.' : '') + '</div>'; }
     else if (a && a.notes && a.notes.truncated) { banner = '<div class="alert alert-warning mb-0">This contract is very long, so only the first part of the document was analyzed.</div>'; }
     return '<div class="glass p-3 mb-3"><div class="d-flex justify-content-between align-items-center gap-2 flex-wrap"><div>' + state + (a ? ' <small class="text-muted">' + h(TT.fmtDateTime(a.created_at)) + '</small>' : '') + '</div><div class="d-flex gap-2">' + btns + '</div></div>' +
-      (banner ? '<div class="mt-3">' + banner + '</div>' : '') + '</div>' +
-      '<p class="small text-muted">AI findings are suggestions that require human review. TermTrail AI provides informational assistance, not legal advice.</p>';
+      (banner ? '<div class="mt-3">' + banner + '</div>' : '') + '</div>';
   }
 
   function render() {
