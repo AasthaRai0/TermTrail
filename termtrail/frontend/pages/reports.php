@@ -15,5 +15,4 @@ require __DIR__ . '/../components/app_shell_start.php';
 </div></form></div>
 <div class="glass p-2 p-md-3"><div id="r_meta" class="small text-muted mb-2" role="status">Choose a report and click Preview.</div>
   <div class="table-responsive"><table class="table table-sm align-middle mb-0"><thead id="r_head"></thead><tbody id="r_body"></tbody></table></div></div>
-<p class="small text-muted mt-3 mb-0">Informational reports generated from TermTrail AI records. AI-generated findings are suggestions that require human review. Not legal advice.</p>
 <?php require __DIR__ . '/../components/app_shell_end.php'; ?>
